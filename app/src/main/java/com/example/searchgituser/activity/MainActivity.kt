@@ -36,11 +36,7 @@ class MainActivity : AppCompatActivity() {
         binding.editQuery.setOnEditorActionListener { v, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                 if (v.text.toString().isNotEmpty()) {
-                    binding.viewmodel?.getItem()?.observe(this, Observer { items ->
-                        items?.let {
-                            (binding.recycleView.adapter as UserAdapter).submitList(items)
-                        }
-                    })
+                    viewModel.getList()
                     filterString = v.text.toString()
 
                 } else {
@@ -85,6 +81,11 @@ class MainActivity : AppCompatActivity() {
                 window.clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE)
             }
         })
+
+        binding.viewmodel?.onDataChangeLiveData?.observe(this, Observer {
+            (binding.recycleView.adapter as UserAdapter).submitList(it)
+        })
+
 
     }
 

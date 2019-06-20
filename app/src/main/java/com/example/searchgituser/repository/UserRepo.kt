@@ -1,11 +1,13 @@
 package com.example.searchgituser.repository
 
-import androidx.lifecycle.LiveData
-import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
+import androidx.paging.RxPagedListBuilder
 import com.example.searchgituser.activity.UserInfo
 import com.example.searchgituser.activity.UserViewModel
 import com.example.searchgituser.data_source.UserDataSourceFactory
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 
 class UserRepo(userViewModel: UserViewModel) {
 
@@ -19,11 +21,11 @@ class UserRepo(userViewModel: UserViewModel) {
         .setEnablePlaceholders(false)
         .build()
 
-    fun getItems(): LiveData<PagedList<UserInfo>> {
-
-        return LivePagedListBuilder<Int, UserInfo>(factory, config)
-            .setInitialLoadKey(0)
-            .build()
+    fun getList(): Observable<PagedList<UserInfo>> {
+        return RxPagedListBuilder(factory, config)
+            .setFetchScheduler(Schedulers.io())
+            .setNotifyScheduler(AndroidSchedulers.mainThread())
+            .buildObservable()
     }
 
 }
