@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">SearchGitUser</string>
+    <string name="hint">please input string</string>
+</resources>
