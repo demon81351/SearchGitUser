@@ -5,6 +5,7 @@ import com.example.searchgituser.activity.UserInfo
 import com.example.searchgituser.activity.UserViewModel
 import com.example.searchgituser.http.ResourceProvider
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 class UserDataSource(private val viewModel: UserViewModel) : PageKeyedDataSource<Int, UserInfo>() {
 
@@ -53,6 +54,16 @@ class UserDataSource(private val viewModel: UserViewModel) : PageKeyedDataSource
             )
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(Schedulers.newThread())
+                .map {
+                    if(!it.isSuccessful){
+                        viewModel.onLoadingLiveData.postValue(false)
+                        viewModel.onShowErrorLiveData.postValue(true)
+                        throw Exception("response code is not success")
+                    }else{
+                        it
+                    }
+                }
+                .retryWhen { error -> error.delay(10, TimeUnit.SECONDS) }
                 .subscribe({
                     viewModel.onLoadingLiveData.postValue(false)
                     if (it.isSuccessful) {

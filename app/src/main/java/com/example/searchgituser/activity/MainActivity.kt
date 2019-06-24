@@ -86,6 +86,10 @@ class MainActivity : AppCompatActivity() {
             (binding.recycleView.adapter as UserAdapter).submitList(it)
         })
 
+        binding.viewmodel?.onShowErrorLiveData?.observe(this, Observer {
+            Toast.makeText(this, "Network is fail, please try again later", Toast.LENGTH_LONG).show()
+        })
+
 
     }
 

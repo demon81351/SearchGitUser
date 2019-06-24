@@ -14,6 +14,7 @@ class UserViewModel : ViewModel() {
 
     val filterString = MutableLiveData<String>()
     val onLoadingLiveData = MutableLiveData<Boolean>()
+    val onShowErrorLiveData = MutableLiveData<Boolean>()
     val onDataChangeLiveData = MutableLiveData<PagedList<UserInfo>>()
 
     private val userRepo = UserRepo(this)
